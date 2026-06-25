@@ -12,9 +12,11 @@ public class PlaylistsController : ControllerBase
 {
     private readonly IPlaylistRepository _playlistRepository;
 
-    public PlaylistsController(IPlaylistRepository playlistRepository)
+    public PlaylistsController(IPlaylistRepository playlistRepository, ISongRepository songRepository)
     {
+
         _playlistRepository = playlistRepository;
+
     }
 
 
@@ -57,6 +59,8 @@ public class PlaylistsController : ControllerBase
         if (deletedPlaylist == null) return NotFound();
         return NoContent();
     }
+
+
 
     [HttpPost("{playlistId}/songs")]
     public async Task<IActionResult> AddSongToPlaylist(Guid playlistId, [FromBody] Song song)

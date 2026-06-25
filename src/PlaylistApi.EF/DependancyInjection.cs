@@ -17,6 +17,7 @@ public static class DependencyInjection
             options.UseSqlite(connectionString, b => b.MigrationsAssembly("PlaylistApi.EF")));   // UseSqlite lives here, not in API
 
         services.AddScoped<IPlaylistRepository, PlaylistRepository>();
+        services.AddScoped<ISongRepository, SongRepository>();
         return services;
     }
 }
