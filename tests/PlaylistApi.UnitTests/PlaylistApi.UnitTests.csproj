@@ -21,6 +21,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\PlaylistApi.Core\PlaylistApi.Core.csproj" />
+    <ProjectReference Include="..\..\src\PlaylistApi.EF\PlaylistApi.EF.csproj" />
   </ItemGroup>
 
 </Project>
