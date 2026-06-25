@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace PlaylistApi.src.PlaylistApi.Core.Entities
+namespace PlaylistApi.Core.Entities
 {
     public class User
     {

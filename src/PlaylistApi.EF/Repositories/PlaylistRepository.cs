@@ -3,9 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using PlaylistApi.src.PlaylistApi.Core.Entities;
-using PlaylistApi.src.PlaylistApi.Core.Interfaces;
-using PlaylistApi.src.PlaylistApi.EF;
+using PlaylistApi.Core.Entities;
+using PlaylistApi.Core.Interfaces;
+using PlaylistApi.EF;
+
 
 namespace PlaylistApi.EF.Repositories
 {
@@ -45,11 +46,19 @@ namespace PlaylistApi.EF.Repositories
             return playlist;
         }
 
-        public async Task<Playlist?> UpdatePlaylistAsync(Playlist playlist)
+        public async Task<Playlist?> UpdatePlaylistAsync(Guid id, Playlist playlist)
         {
-            _context.Playlists.Update(playlist);
+
+
+            var existingPlaylist = await _context.Playlists.FindAsync(id);
+            if (existingPlaylist == null) return null;
+
+            existingPlaylist.Name = playlist.Name;
+            existingPlaylist.Description = playlist.Description;
+            existingPlaylist.Songs = playlist.Songs;
+
             await _context.SaveChangesAsync();
-            return playlist;
+            return existingPlaylist;
         }
         }
     }

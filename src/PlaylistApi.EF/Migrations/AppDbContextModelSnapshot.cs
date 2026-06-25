@@ -3,7 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using PlaylistApi.src.PlaylistApi.EF;
+
 
 #nullable disable
 
@@ -17,7 +17,7 @@ namespace PlaylistApi.EF.Migrations
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "10.0.9");
 
-            modelBuilder.Entity("PlaylistApi.src.PlaylistApi.Core.Entities.Playlist", b =>
+            modelBuilder.Entity("PlaylistApi.Core.Entities.Playlist", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -114,12 +114,12 @@ namespace PlaylistApi.EF.Migrations
 
             modelBuilder.Entity("PlaylistApi.src.PlaylistApi.Core.Entities.Song", b =>
                 {
-                    b.HasOne("PlaylistApi.src.PlaylistApi.Core.Entities.Playlist", null)
+                    b.HasOne("PlaylistApi.Core.Entities.Playlist", null)
                         .WithMany("Songs")
                         .HasForeignKey("PlaylistId");
                 });
 
-            modelBuilder.Entity("PlaylistApi.src.PlaylistApi.Core.Entities.Playlist", b =>
+            modelBuilder.Entity("PlaylistApi.Core.Entities.Playlist", b =>
                 {
                     b.Navigation("Songs");
                 });

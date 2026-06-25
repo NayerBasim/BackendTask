@@ -1,7 +1,10 @@
 // src/PlaylistApi.EF/DependencyInjection.cs
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using PlaylistApi.src.PlaylistApi.EF;
+using PlaylistApi.EF.Repositories;
+using PlaylistApi.Core.Interfaces;
+using PlaylistApi.EF;
+
 
 namespace PlaylistApi.EF;
 
@@ -13,6 +16,7 @@ public static class DependencyInjection
         services.AddDbContext<AppDbContext>(options =>
             options.UseSqlite(connectionString, b => b.MigrationsAssembly("PlaylistApi.EF")));   // UseSqlite lives here, not in API
 
+        services.AddScoped<IPlaylistRepository, PlaylistRepository>();
         return services;
     }
 }

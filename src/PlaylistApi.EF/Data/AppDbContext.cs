@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 
-namespace PlaylistApi.src.PlaylistApi.EF
+namespace PlaylistApi.EF
 {
     public class AppDbContext: DbContext
     {

@@ -2,15 +2,16 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using PlaylistApi.Core.Entities;
 
-namespace PlaylistApi.src.PlaylistApi.Core.Interfaces
+namespace PlaylistApi.Core.Interfaces
 {
     public interface IPlaylistRepository
     {
-        Task<Entities.Playlist?> GetPlaylistByIdAsync(Guid id);
-        Task<List<Entities.Playlist>?> GetAllPlaylistsAsync();
-        Task<Entities.Playlist?> AddPlaylistAsync(Entities.Playlist playlist);
-        Task<Entities.Playlist?> UpdatePlaylistAsync(Entities.Playlist playlist);
-        Task<Entities.Playlist?> DeletePlaylistAsync(Guid id);
+        Task<Playlist?> GetPlaylistByIdAsync(Guid id);
+        Task<List<Playlist>?> GetAllPlaylistsAsync();
+        Task<Playlist?> AddPlaylistAsync(Playlist playlist);
+        Task<Playlist?> UpdatePlaylistAsync(Guid id, Playlist playlist);
+        Task<Playlist?> DeletePlaylistAsync(Guid id);
     }
 }
