@@ -180,26 +180,41 @@ public class PlaylistRepositoryTests : IDisposable
     // ── AddSongToPlaylistAsync ────────────────────────────────────────
 
     [Fact]
-    public async Task AddSongToPlaylistAsync_ExistingPlaylist_AddsSong()
+    public async Task AddSongToPlaylistAsync_ExistingSongAndPlaylist_LinksSong()
     {
+        var song = new Song { Title = "Song A", Artist = "Artist A" };
         var playlist = new Playlist { Name = "Chill", Description = "A chill playlist" };
+        _context.Songs.Add(song);          // song already exists in the catalog
         _context.Playlists.Add(playlist);
         await _context.SaveChangesAsync();
 
-        var result = await _repository.AddSongToPlaylistAsync(
-            playlist.Id, new Song { Title = "Song A", Artist = "Artist A" });
+        var result = await _repository.AddSongToPlaylistAsync(playlist.Id, song.Id);
 
         Assert.NotNull(result);
         Assert.Single(result!.Songs);
-        Assert.Equal("Song A", result.Songs[0].Title);
-        Assert.Equal(1, await _context.Songs.CountAsync());
+        Assert.Equal(song.Id, result.Songs[0].Id);
     }
 
     [Fact]
     public async Task AddSongToPlaylistAsync_NonExistingPlaylist_ReturnsNull()
     {
-        var result = await _repository.AddSongToPlaylistAsync(
-            Guid.NewGuid(), new Song { Title = "Song A", Artist = "Artist A" });
+        var song = new Song { Title = "Song A", Artist = "Artist A" };
+        _context.Songs.Add(song);
+        await _context.SaveChangesAsync();
+
+        var result = await _repository.AddSongToPlaylistAsync(Guid.NewGuid(), song.Id);
+
+        Assert.Null(result);
+    }
+
+    [Fact]
+    public async Task AddSongToPlaylistAsync_NonExistingSong_ReturnsNull()
+    {
+        var playlist = new Playlist { Name = "Chill", Description = "A chill playlist" };
+        _context.Playlists.Add(playlist);
+        await _context.SaveChangesAsync();
+
+        var result = await _repository.AddSongToPlaylistAsync(playlist.Id, Guid.NewGuid());
 
         Assert.Null(result);
     }

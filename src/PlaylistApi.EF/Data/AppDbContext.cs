@@ -16,7 +16,38 @@ namespace PlaylistApi.EF
         public DbSet<Core.Entities.Playlist> Playlists { get; set; }
         public DbSet<Core.Entities.Song> Songs { get; set; }
         public DbSet<Core.Entities.User> Users { get; set; }
-        
+
+        public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+        {
+            ApplyAuditTimestamps();
+            return base.SaveChangesAsync(cancellationToken);
+        }
+
+        public override int SaveChanges()
+        {
+            ApplyAuditTimestamps();
+            return base.SaveChanges();
+        }
+
+        // Stamps CreatedAt on insert and UpdatedAt on insert/update for auditable entities.
+        private void ApplyAuditTimestamps()
+        {
+            var now = DateTime.UtcNow;
+
+            foreach (var entry in ChangeTracker.Entries<IAuditableEntity>())
+            {
+                if (entry.State == EntityState.Added)
+                {
+                    entry.Entity.CreatedAt = now;
+                    entry.Entity.UpdatedAt = now;
+                }
+                else if (entry.State == EntityState.Modified)
+                {
+                    entry.Entity.UpdatedAt = now;
+                }
+            }
+        }
+
        protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(AppDbContext).Assembly);

@@ -57,21 +57,29 @@ namespace PlaylistApi.EF.Repositories
 
             existingPlaylist.Name = playlist.Name;
             existingPlaylist.Description = playlist.Description;
-            existingPlaylist.Songs = playlist.Songs;
+            // Songs are managed through the add/remove-song endpoints, not on update.
 
             await _context.SaveChangesAsync();
             return existingPlaylist;
         }
 
-        public async Task<Playlist?> AddSongToPlaylistAsync(Guid playlistId, Song song)
+        public async Task<Playlist?> AddSongToPlaylistAsync(Guid playlistId, Guid songId)
         {
             var playlist = await _context.Playlists
                 .Include(p => p.Songs)
                 .FirstOrDefaultAsync(p => p.Id == playlistId);
             if (playlist == null) return null;
 
-            playlist.Songs.Add(song);
-            await _context.SaveChangesAsync();
+            var song = await _context.Songs.FindAsync(songId);
+            if (song == null) return null;
+
+            // Link the existing catalog song to this playlist (no-op if already linked).
+            if (!playlist.Songs.Any(s => s.Id == songId))
+            {
+                playlist.Songs.Add(song);
+                await _context.SaveChangesAsync();
+            }
+
             return playlist;
         }
 

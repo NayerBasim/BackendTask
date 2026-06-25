@@ -1,6 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
 using PlaylistApi.Core.Interfaces;
-using PlaylistApi.Core.Entities;
 using PlaylistApi.Core.DTOs.Playlists;
 using PlaylistApi.Core.Mappers;
 
@@ -12,11 +11,9 @@ public class PlaylistsController : ControllerBase
 {
     private readonly IPlaylistRepository _playlistRepository;
 
-    public PlaylistsController(IPlaylistRepository playlistRepository, ISongRepository songRepository)
+    public PlaylistsController(IPlaylistRepository playlistRepository)
     {
-
         _playlistRepository = playlistRepository;
-
     }
 
 
@@ -36,18 +33,18 @@ public class PlaylistsController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<IActionResult> AddPlaylist([FromBody] PlaylistDto playlist) 
+    public async Task<IActionResult> AddPlaylist([FromBody] CreatePlaylistDto playlist)
     {
-        var addedPlaylist = await _playlistRepository.AddPlaylistAsync(playlist.dtoToPlaylist());
-        return CreatedAtAction(nameof(GetPlaylistById), new { id = addedPlaylist?.Id }, addedPlaylist);
+        var addedPlaylist = await _playlistRepository.AddPlaylistAsync(playlist.toPlaylist());
+        return CreatedAtAction(nameof(GetPlaylistById), new { id = addedPlaylist!.Id }, addedPlaylist.playlistToDto());
     }
 
 
 
     [HttpPut("{id}")]
-    public async Task<IActionResult> UpdatePlaylist(Guid id, [FromBody] PlaylistDto playlist) 
+    public async Task<IActionResult> UpdatePlaylist(Guid id, [FromBody] EditPlaylistDto playlist)
     {
-        var updatedPlaylist = await _playlistRepository.UpdatePlaylistAsync(id, playlist.dtoToPlaylist());
+        var updatedPlaylist = await _playlistRepository.UpdatePlaylistAsync(id, playlist.toPlaylist());
         if (updatedPlaylist == null) return NotFound();
         return Ok(updatedPlaylist.playlistToDto());
     }
@@ -63,9 +60,9 @@ public class PlaylistsController : ControllerBase
 
 
     [HttpPost("{playlistId}/songs")]
-    public async Task<IActionResult> AddSongToPlaylist(Guid playlistId, [FromBody] Song song)
+    public async Task<IActionResult> AddSongToPlaylist(Guid playlistId, [FromBody] AddSongToPlaylistDto request)
     {
-        var updatedPlaylist = await _playlistRepository.AddSongToPlaylistAsync(playlistId, song);
+        var updatedPlaylist = await _playlistRepository.AddSongToPlaylistAsync(playlistId, request.SongId);
         if (updatedPlaylist == null) return NotFound();
         return Ok(updatedPlaylist.playlistToDto());
     }

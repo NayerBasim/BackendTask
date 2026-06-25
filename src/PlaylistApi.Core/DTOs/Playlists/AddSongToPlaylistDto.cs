@@ -7,8 +7,7 @@ namespace PlaylistApi.Core.DTOs.Playlists
 {
     public class AddSongToPlaylistDto
     {
-        public Guid PlaylistId { get; set; }
+        // The playlist is identified by the route; only the song to link is needed in the body.
         public Guid SongId { get; set; }
-        
     }
 }

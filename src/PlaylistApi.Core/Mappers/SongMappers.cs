@@ -16,6 +16,8 @@ namespace PlaylistApi.Core.Mappers
                 Id = song.Id,
                 Title = song.Title,
                 Artist = song.Artist,
+                Album = song.Album,
+                Genre = song.Genre,
                 Duration = song.Duration
             };
         }
@@ -27,6 +29,8 @@ namespace PlaylistApi.Core.Mappers
                 Id = songDto.Id,
                 Title = songDto.Title,
                 Artist = songDto.Artist,
+                Album = songDto.Album,
+                Genre = songDto.Genre,
                 Duration = songDto.Duration
             };
         }

@@ -13,6 +13,9 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddOpenApi();
 builder.Services.AddControllers();
 
+
+builder.Services.AddProblemDetails();
+
 builder.Services.AddPersistence(builder.Configuration.GetConnectionString("Default")!);
 
 
@@ -22,8 +25,15 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
-    app.MapScalarApiReference(); 
+    app.MapScalarApiReference();
 }
+else
+{
+    // Outside development, unhandled exceptions are returned as ProblemDetails (500).
+    app.UseExceptionHandler();
+}
+
+app.UseStatusCodePages();
 
 app.UseHttpsRedirection();
 

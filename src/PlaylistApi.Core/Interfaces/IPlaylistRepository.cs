@@ -13,7 +13,7 @@ namespace PlaylistApi.Core.Interfaces
         Task<Playlist?> AddPlaylistAsync(Playlist playlist);
         Task<Playlist?> UpdatePlaylistAsync(Guid id, Playlist playlist);
         Task<Playlist?> DeletePlaylistAsync(Guid id);
-        Task<Playlist?> AddSongToPlaylistAsync(Guid playlistId, Song song);
+        Task<Playlist?> AddSongToPlaylistAsync(Guid playlistId, Guid songId);
         Task<Playlist?> RemoveSongFromPlaylistAsync(Guid playlistId, Guid songId);
     }
 }

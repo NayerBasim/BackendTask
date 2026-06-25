@@ -36,26 +36,41 @@ public class SongEndpointsTests : IClassFixture<PlaylistApiFactory>
     // ── POST /api/playlists/{id}/songs ────────────────────────────────
 
     [Fact]
-    public async Task AddSongToPlaylist_ExistingPlaylist_AddsSong()
+    public async Task AddSongToPlaylist_ExistingSong_LinksSong()
     {
         var playlist = await CreatePlaylistAsync("Chill");
+        var songId = await GetCatalogSongIdAsync(0);
 
         var response = await _client.PostAsJsonAsync(
             $"/api/playlists/{playlist!.Id}/songs",
-            new { Title = "Song A", Artist = "Artist A" });
+            new { SongId = songId });
         var updated = await response.Content.ReadFromJsonAsync<Playlist>();
 
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         Assert.Single(updated!.Songs);
-        Assert.Equal("Song A", updated.Songs[0].Title);
+        Assert.Equal(songId, updated.Songs[0].Id);
     }
 
     [Fact]
     public async Task AddSongToPlaylist_NonExistingPlaylist_Returns404()
     {
+        var songId = await GetCatalogSongIdAsync(0);
+
         var response = await _client.PostAsJsonAsync(
             $"/api/playlists/{Guid.NewGuid()}/songs",
-            new { Title = "Song A", Artist = "Artist A" });
+            new { SongId = songId });
+
+        Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
+    }
+
+    [Fact]
+    public async Task AddSongToPlaylist_NonExistingSong_Returns404()
+    {
+        var playlist = await CreatePlaylistAsync("Chill");
+
+        var response = await _client.PostAsJsonAsync(
+            $"/api/playlists/{playlist!.Id}/songs",
+            new { SongId = Guid.NewGuid() });
 
         Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
     }
@@ -66,11 +81,10 @@ public class SongEndpointsTests : IClassFixture<PlaylistApiFactory>
     public async Task RemoveSongFromPlaylist_ExistingSong_RemovesSong()
     {
         var playlist = await CreatePlaylistAsync("Chill");
-        var addResponse = await _client.PostAsJsonAsync(
+        var songId = await GetCatalogSongIdAsync(1); // use a different catalog song
+        await _client.PostAsJsonAsync(
             $"/api/playlists/{playlist!.Id}/songs",
-            new { Title = "Song A", Artist = "Artist A" });
-        var withSong = await addResponse.Content.ReadFromJsonAsync<Playlist>();
-        var songId = withSong!.Songs[0].Id;
+            new { SongId = songId });
 
         var response = await _client.DeleteAsync(
             $"/api/playlists/{playlist.Id}/songs/{songId}");
@@ -103,12 +117,18 @@ public class SongEndpointsTests : IClassFixture<PlaylistApiFactory>
         Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
     }
 
-    // ── Helper ────────────────────────────────────────────────────────
+    // ── Helpers ───────────────────────────────────────────────────────
 
     private async Task<Playlist?> CreatePlaylistAsync(string name)
     {
         var response = await _client.PostAsJsonAsync(
             "/api/playlists", new { Name = name, Description = "A chill playlist" });
         return await response.Content.ReadFromJsonAsync<Playlist>();
+    }
+
+    private async Task<Guid> GetCatalogSongIdAsync(int index)
+    {
+        var songs = await _client.GetFromJsonAsync<List<Song>>("/api/songs");
+        return songs![index].Id;
     }
 }

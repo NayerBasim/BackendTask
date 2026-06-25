@@ -93,9 +93,10 @@ public class PlaylistsControllerTests : IClassFixture<PlaylistApiFactory>
     public async Task GetPlaylistById_ReturnsSongsIncluded()
     {
         var created = await CreatePlaylistAsync("Chill");
+        var songId = await GetCatalogSongIdAsync();
         await _client.PostAsJsonAsync(
             $"/api/playlists/{created!.Id}/songs",
-            new { Title = "Song A", Artist = "Artist A" });
+            new { SongId = songId });
 
         var response = await _client.GetAsync($"/api/playlists/{created.Id}");
         var playlist = await response.Content.ReadFromJsonAsync<Playlist>();
@@ -179,5 +180,11 @@ public class PlaylistsControllerTests : IClassFixture<PlaylistApiFactory>
         var response = await _client.PostAsJsonAsync(
             "/api/playlists", new { Name = name, Description = description });
         return await response.Content.ReadFromJsonAsync<Playlist>();
+    }
+
+    private async Task<Guid> GetCatalogSongIdAsync()
+    {
+        var songs = await _client.GetFromJsonAsync<List<Song>>("/api/songs");
+        return songs!.First().Id;
     }
 }

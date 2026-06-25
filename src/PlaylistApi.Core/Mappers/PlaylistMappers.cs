@@ -20,14 +20,22 @@ namespace PlaylistApi.Core.Mappers
             };
         }
 
-        public static Playlist dtoToPlaylist(this PlaylistDto playlistDto)
+        public static Playlist toPlaylist(this CreatePlaylistDto dto)
         {
             return new Playlist
             {
-                Id = playlistDto.Id,
-                Name = playlistDto.Name,
-                Description = playlistDto.Description,
-                Songs = playlistDto.Songs.Select(s => s.dtoToSong()).ToList()
+                Name = dto.Name,
+                Description = dto.Description
+            };
+        }
+
+        public static Playlist toPlaylist(this EditPlaylistDto dto)
+        {
+            return new Playlist
+            {
+                Id = dto.Id,
+                Name = dto.Name,
+                Description = dto.Description
             };
         }
     }

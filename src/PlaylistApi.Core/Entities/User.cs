@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace PlaylistApi.Core.Entities
 {
-    public class User
+    public class User : IAuditableEntity
     {
         public Guid Id { get; set; }
         public string Name { get; set; } = string.Empty;
