@@ -1,6 +1,7 @@
 using Scalar.AspNetCore;
 using PlaylistApi.EF;
 using Microsoft.EntityFrameworkCore;
+using PlaylistApi.Core.Entities;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -30,10 +31,16 @@ app.UseAuthorization();
 
 app.MapControllers();
 
+
 using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-    db.Database.Migrate();  // creates the .db file and applies all migrations automatically
+    // Migrate() is relational-only; non-relational providers (e.g. InMemory in tests) use EnsureCreated()
+    if (db.Database.IsRelational())
+        db.Database.Migrate();
+    else
+        db.Database.EnsureCreated();
+
 }
 
 app.Run();

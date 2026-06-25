@@ -57,4 +57,20 @@ public class PlaylistsController : ControllerBase
         if (deletedPlaylist == null) return NotFound();
         return NoContent();
     }
+
+    [HttpPost("{playlistId}/songs")]
+    public async Task<IActionResult> AddSongToPlaylist(Guid playlistId, [FromBody] Song song)
+    {
+        var updatedPlaylist = await _playlistRepository.AddSongToPlaylistAsync(playlistId, song);
+        if (updatedPlaylist == null) return NotFound();
+        return Ok(updatedPlaylist.playlistToDto());
+    }
+
+    [HttpDelete("{playlistId}/songs/{songId}")]
+    public async Task<IActionResult> RemoveSongFromPlaylist(Guid playlistId, Guid songId)
+    {
+        var updatedPlaylist = await _playlistRepository.RemoveSongFromPlaylistAsync(playlistId, songId);
+        if (updatedPlaylist == null) return NotFound();
+        return Ok(updatedPlaylist.playlistToDto());
+    }
 }

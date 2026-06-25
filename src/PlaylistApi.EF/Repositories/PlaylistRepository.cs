@@ -32,7 +32,9 @@ namespace PlaylistApi.EF.Repositories
 
         public async Task<Playlist?> GetPlaylistByIdAsync(Guid id)
         {
-            return await _context.Playlists.FindAsync(id);
+            return await _context.Playlists
+                .Include(p => p.Songs)
+                .FirstOrDefaultAsync(p => p.Id == id);
         }
 
 
@@ -60,5 +62,28 @@ namespace PlaylistApi.EF.Repositories
             await _context.SaveChangesAsync();
             return existingPlaylist;
         }
+
+        public async Task<Playlist?> AddSongToPlaylistAsync(Guid playlistId, Song song)
+        {
+            var playlist = await _context.Playlists.FindAsync(playlistId);
+            if (playlist == null) return null;
+
+            playlist.Songs.Add(song);
+            await _context.SaveChangesAsync();
+            return playlist;
+        }
+
+        public async Task<Playlist?> RemoveSongFromPlaylistAsync(Guid playlistId, Guid songId)
+        {
+            var playlist = await _context.Playlists.FindAsync(playlistId);
+            if (playlist == null) return null;
+
+            var songToRemove = playlist.Songs.FirstOrDefault(s => s.Id == songId);
+            if (songToRemove == null) return null;
+
+            playlist.Songs.Remove(songToRemove);
+            await _context.SaveChangesAsync();
+            return playlist;
         }
     }
+}
