@@ -1,0 +1,11 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/PlaylistApi.API/PlaylistApi.API.csproj" />
+    <Project Path="src/PlaylistApi.Core/PlaylistApi.Core.csproj" />
+    <Project Path="src/PlaylistApi.EF/PlaylistApi.EF.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/PlaylistApi.IntegrationTests/PlaylistApi.IntegrationTests.csproj" />
+    <Project Path="tests/PlaylistApi.UnitTests/PlaylistApi.UnitTests.csproj" />
+  </Folder>
+</Solution>
