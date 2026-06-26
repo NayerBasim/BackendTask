@@ -42,6 +42,10 @@ Controllers depend on **repository interfaces** (`IPlaylistRepository`, `ISongRe
 - A playlist has many songs via an **optional** foreign key (`Song.PlaylistId` is nullable). Songs are treated as a **shared catalog**: deleting a playlist orphans its songs (sets their `PlaylistId` to null) rather than deleting them.
 - Four songs are **seeded** on startup.
 
+## Deployment
+
+The app is containerized and ready to deploy free on Render — see [DEPLOYMENT.md](./DEPLOYMENT.md).
+
 ## Running the Project
 
 **Prerequisites:** [.NET 10 SDK](https://dotnet.microsoft.com/download)

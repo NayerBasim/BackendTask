@@ -1,0 +1,19 @@
+# Build artifacts
+**/bin/
+**/obj/
+
+# Local database files
+*.db
+*.db-shm
+*.db-wal
+
+# VCS / IDE / tooling
+.git/
+.gitignore
+.vs/
+.vscode/
+
+# Not needed in the image
+tests/
+docs/
+**/*.user
