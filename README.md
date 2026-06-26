@@ -1,6 +1,6 @@
 # Playlist API
 
-A REST API for creating playlists and managing the songs inside them, built for the Academy Backend Test. I hosted this project. You can find the backend at [Google Cloud Deployment ](https://playlist-api-63827338652.me-central1.run.app). Note the database is just an sqlite instance in the backend so every session it resets . Exact code on the deploy branch. I also made and a React frontend that calls this backend at [Vercel Frontend](https://frontend-virid-ten-38.vercel.app). There are already already 4 songs seeded into the DB on both local and hosted versions. You can create a playlist to test it out.
+A REST API for creating playlists and managing the songs inside them, built for the Academy Backend Test. I hosted this project. You can find the backend at [Google Cloud Deployment ](https://playlist-api-63827338652.me-central1.run.app). Note the database is just an sqlite instance in the backend so every session it resets . Exact code on the deploy branch. I also made and a React frontend that calls this backend at [Vercel Frontend](https://luftsong-playlists.vercel.app). There are already already 4 songs seeded into the DB on both local and hosted versions. You can create a playlist to test it out.
 
 ## Tech Stack
 
