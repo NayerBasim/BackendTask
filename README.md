@@ -1,6 +1,6 @@
 # Playlist API
 
-A REST API for creating playlists and managing the songs inside them, built for the Academy Backend Test. I hosted this project. You can find the backend at [Google Cloud Deployment ](https://playlist-api-63827338652.me-central1.run.app) and a frontend that calls this backend at [Vercel Frontend](https://frontend-cto4trs86-nayer-basims-projects.vercel.app)
+A REST API for creating playlists and managing the songs inside them, built for the Academy Backend Test. I hosted this project. You can find the backend at [Google Cloud Deployment ](https://playlist-api-63827338652.me-central1.run.app). Note the database is just an sqlite instance in the backend so every session it resets . Exact code on the deploy branch. I also made and a React frontend that calls this backend at [Vercel Frontend](https://frontend-virid-ten-38.vercel.app). There are already already 4 songs seeded into the DB on both local and hosted versions. You can create a playlist to test it out.
 
 ## Tech Stack
 
@@ -44,15 +44,19 @@ A simple layered (clean-ish) architecture:
 
 **Prerequisites:** [.NET 10 SDK](https://dotnet.microsoft.com/download)
 
+1. Clone the project locally onto your computer
+
+2. Navigate into BackendTask folder
+
 ```bash
 # from the BackendTask folder
 dotnet restore
 dotnet run --project src/PlaylistApi.API
 ```
 
-The database file and schema are created/migrated automatically on first run. The API listens on the URL printed in the console (e.g. `https://localhost:xxxx`).
+3. The database file and schema are created/migrated automatically on first run. The API listens on the URL printed in the console (e.g. `https://localhost:xxxx`).
 
-Interactive docs (development): open `/scalar/v1` in the browser.
+4. Interactive docs (development): open `/scalar/v1` in the browser.
 
 ## API Endpoints
 
