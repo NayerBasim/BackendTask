@@ -40,8 +40,15 @@ namespace PlaylistApi.EF.Repositories
 
         public async Task<Playlist?> DeletePlaylistAsync(Guid id)
         {
-            var playlist = await _context.Playlists.FindAsync(id);
+            var playlist = await _context.Playlists
+                .Include(p => p.Songs)
+                .FirstOrDefaultAsync(p => p.Id == id);
             if (playlist == null) return null;
+
+            // Songs are a shared catalog — orphan them (set PlaylistId = null) instead of
+            // deleting. Clearing the navigation makes EF null the FK before the delete,
+            // which satisfies SQLite's foreign-key constraint.
+            playlist.Songs.Clear();
 
             _context.Playlists.Remove(playlist);
             await _context.SaveChangesAsync();
