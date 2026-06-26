@@ -1,6 +1,6 @@
 # Playlist API
 
-A REST API for creating playlists and managing the songs inside them, built for the Academy Backend Test.
+A REST API for creating playlists and managing the songs inside them, built for the Academy Backend Test. I hosted this project. You can find the backend at [Google Cloud Deployment ](https://playlist-api-63827338652.me-central1.run.app) and a frontend that calls this backend at [Vercel Frontend](https://frontend-cto4trs86-nayer-basims-projects.vercel.app)
 
 ## Tech Stack
 
@@ -11,15 +11,14 @@ A REST API for creating playlists and managing the songs inside them, built for 
 
 ### Why SQLite?
 
-SQLite is a zero-configuration, file-based relational database (`playlist.db`). It was chosen because:
+I would usually use MSSQL but I used because:
 
-- The data is relational (a playlist has many songs) and benefits from foreign keys.
-- It requires **no separate server to install or run** — the reviewer can clone and run the project on any machine immediately, which matches the "must run properly on any machine" deliverable.
-- The same EF Core model can be swapped to SQL Server / PostgreSQL by changing one line in `AddPersistence` if production scale is needed.
+- The data is relational (a playlist has many songs) and benefits from foreign keys ( So any SQL database ).
+- It requires **no separate server to install or run** — the reviewer can clone and run the project on any machine immediately( Only SQLite can do that)
 
 ## Scope & Assumptions
 
-> **Note on users / ownership:** The business requirements mention *"a user's playlists."* User accounts, authentication, and per-user ownership of playlists are considered **out of scope** for this task and are **not implemented** — playlists are currently global rather than scoped to an owner. A `User` entity exists as a placeholder only. Adding ownership would mean introducing a `UserId` on `Playlist`, authentication, and filtering queries by the current user.
+> **Note on users / ownership:** User accounts, authentication, and per-user ownership of playlists are considered **out of scope** for this task and are **not implemented** 
 
 ## Architecture
 
@@ -27,13 +26,12 @@ A simple layered (clean-ish) architecture:
 
 | Project | Responsibility |
 |---|---|
-| `PlaylistApi.API` | HTTP layer — controllers, DI wiring, app startup |
+| `PlaylistApi.API` | HTTP layer — controllers, app startup |
 | `PlaylistApi.Core` | Domain entities, DTOs, repository interfaces, mappers |
 | `PlaylistApi.EF` | EF Core `AppDbContext`, migrations, repository implementations |
 | `tests/PlaylistApi.UnitTests` | Repository unit tests (in-memory DB) |
-| `tests/PlaylistApi.IntegrationTests` | End-to-end HTTP tests via `WebApplicationFactory` |
+| `tests/PlaylistApi.IntegrationTests` | End-to-end HTTP tests 
 
-Controllers depend on **repository interfaces** (`IPlaylistRepository`, `ISongRepository`), so the data layer is decoupled and easily mockable.
 
 ## Data Model
 
@@ -78,23 +76,6 @@ Interactive docs (development): open `/scalar/v1` in the browser.
 
 Request bodies are validated (`Name`/`Title`/`Artist` are required); invalid input returns `400 Bad Request`.
 
-#### Example — create a playlist
-
-```bash
-curl -X POST https://localhost:xxxx/api/playlists \
-  -H "Content-Type: application/json" \
-  -d '{ "name": "Road Trip", "description": "Songs for the drive" }'
-```
-
-#### Example — add a song to a playlist
-
-Songs are a shared catalog. Pick a `songId` from `GET /api/songs`, then link it:
-
-```bash
-curl -X POST https://localhost:xxxx/api/playlists/{playlistId}/songs \
-  -H "Content-Type: application/json" \
-  -d '{ "songId": "11111111-1111-1111-1111-111111111111" }'
-```
 
 ## Tests
 
@@ -105,4 +86,4 @@ dotnet test tests/PlaylistApi.IntegrationTests                # integration only
 ```
 
 - **Unit tests** exercise the repositories against an EF Core in-memory database.
-- **Integration tests** spin up the full app with `WebApplicationFactory`, swapping SQLite for an in-memory provider, and drive the real HTTP endpoints.
+- **Integration tests** spin up the full app, swapping SQLite for an in-memory provider, and drive the real HTTP endpoints.
